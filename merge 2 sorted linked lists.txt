@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+// SLIGHT DOUBT: Do try out the brute force approach as well
+
+// T.C. O(N1 + N2)
+// S.C. (1)   (Optimization is done only for the space S.C. by doing this in-place , the T.C. remains the same in the brute force approach as well)
+
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) { 
+        
+        // note here list1 and list2 are the heads of the 2 sorted linked lists
+        
+        /*MOST OPTIMIZED APPROACH:  (Optimization is done only for the space S.C. by doing this in-place , the T.C. remains the same in the brute force approach as well)
+        
+        It uses 2 pointers which are already given in our question namely the heads of the 2 linked lists
+        
+        Our task is to always make sure that list1 node always points either to the list1 or the list2 , Thus, list1 will always point to the node amongst list1 and list2 which has a value less than or equal to the other node's value. 
+        
+        For eg . if list1->val<=list2->val , then list1 remains as it is i.e. left unchanged
+        
+        But if list1->val>list2->val, then we swap the position of list 1 and list2 (swap only their respective positions and not their node values)
+        
+        Now we make a node named start pointing to the list1 , because we are going to return this start node at the end only as our answer
+        
+        Now, we will check till the time list1->val<=list2->val, and store the last list1 node till this condition was being satisfied inside the while loop (do not store the value instead, store just the node as an entity, since we are going this to connect to list2 in case the while loop conditions fails and turns out to be list->val>list2->val)
+        
+        When the while loop  condition fails, we are going to simply point the temp to l2 and repeat (*)
+        
+        DO A DRY RUN FOR BETTER UNDERSTANDING
+        */
+        
+        if (list1==NULL){
+            return list2;
+        }
+        if (list2==NULL){
+            return list1;
+        }
+        if (list1->val>list2->val){
+            ListNode* temp=list1;
+            list1=list2;
+            list2=temp;
+        }
+        ListNode* start=list1;
+        
+        while (list1!=NULL && list2!=NULL){
+            ListNode* temp=NULL;
+            while (list1!=NULL && list1->val<=list2->val){
+                temp=list1; // NOTE: Write only list1 and not list1->val since temp acts as a node here and not as an integer data type which can store a node's value, also we should realize we are pointing our node to the next set of nodes and not their value: because linkage is possible only between nodes and not between the node values 
+                
+                list1=list1->next;
+            }
+            
+            temp->next=list2;
+            
+            ListNode* temp1=list1;
+            list1=list2;
+            list2=temp1;
+        }
+        return start;
+    }
+};
